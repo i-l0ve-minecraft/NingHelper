@@ -1,0 +1,19 @@
+name: NingHelper
+version: '1.1.6'
+main: com.il0veminecraft.untitled.NingHelper
+api-version: '1.21'
+commands:
+  гдея:
+    description: пишет где вы находитесь
+  NingHelperReload:
+    description: Перезагрузить конфигурацию вайтлиста
+    usage: /<command>
+  nh:
+    description: главная команда плагина
+    usage: /<command> <help|helplugin>
+    aliases: [ninghelper, nh]
+
+permissions:
+  whitelist.reload:
+    description: Позволяет перезагружать конфигурацию вайтлиста
+    default: op

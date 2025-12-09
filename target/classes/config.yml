@@ -1,0 +1,28 @@
+# Включен ли вайтлист
+whitelist-enabled: true
+
+# Сообщение при кике
+kick-message: '&cВы не в списке разрешенных игроков!'
+
+# Сообщение при входе
+join-message: '&e{player} &aзалетел к нам!'
+
+# Сообщение при входе администратора
+admin-join-message: '&cАдминистратор сервера &6{player} &cзашел на сервер!'
+
+# Список разрешенных игроков (никнеймы в нижнем регистре)
+allowed-players:
+  - il0veminecraft14
+  - XD_kar
+  - LAGAHKA
+  - Clayworld200
+  - frutikkek
+  - SulAyd27
+  - UnHappyParrot012
+  - AnonSN
+  - Marinaksolotl
+
+# Список администраторов
+admins:
+  - il0veminecraft14
+  - UnHappyParrot012
