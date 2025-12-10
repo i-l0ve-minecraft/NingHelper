@@ -68,7 +68,7 @@ public class NingHelper extends JavaPlugin {
                 "sulayd27",
                 "unhappyparrot012",
                 "anonsn",
-                "marinaksolotli"
+                "marinaksolotl"
         ));
 
         // Список администраторов по умолчанию
