@@ -56,12 +56,9 @@ login-required: '&cСначала авторизуйтесь!'
         # Исключения (игроки которые не должны авторизовываться)
 exemptions:
 players:
-        - il0veminecraft14
-    - admin
-    - moder
+
 permissions:
-        - ninghelper.auth.bypass
-    - op
+
     
 # Блокировка действий для неавторизованных
 block-actions:

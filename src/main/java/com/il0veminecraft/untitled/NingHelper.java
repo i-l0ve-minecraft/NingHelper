@@ -1,10 +1,12 @@
 package com.il0veminecraft.untitled;
 
+import Commands.AuthCommands;
 import Commands.Commands;
 import Commands.nh_command;
 import auth.AuthManager;
 import auth.AuthListener;
 import org.bukkit.ChatColor;
+import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Arrays;
@@ -12,6 +14,7 @@ import java.util.Arrays;
 public class NingHelper extends JavaPlugin {
     private AuthManager authManager;
     private AuthListener authListener;
+    private AuthCommands authCommands;
 
     @Override
     public void onEnable() {
@@ -20,34 +23,61 @@ public class NingHelper extends JavaPlugin {
         getConfig().options().copyDefaults(true);
         saveConfig();
 
+        getLogger().info("=== ЗАПУСК NINGHELPER ===");
+
         // Инициализируем систему авторизации
         try {
+            getLogger().info("Инициализация системы авторизации...");
             authManager = new AuthManager(this);
             authListener = new AuthListener(this, authManager);
 
-            getServer().getPluginManager().registerEvents(authListener, this);
-            getLogger().info("Система авторизации загружена");
+            // Создаем обработчик команд авторизации
+            getLogger().info("Создание обработчика команд авторизации...");
+            authCommands = new AuthCommands(this, authManager, authListener);
 
-            // НЕТ AuthCommands - значит команды авторизации должны быть в другом классе
-            // или их нужно создать отдельно
+            getServer().getPluginManager().registerEvents(authListener, this);
+            getLogger().info("Слушатель событий зарегистрирован");
+
+            // Регистрируем команды авторизации - ДОБАВЬТЕ ЭТО!
+            getLogger().info("Регистрация команд авторизации...");
+
+            PluginCommand regCommand = getCommand("reg");
+            if (regCommand != null) {
+                regCommand.setExecutor(authCommands);
+                regCommand.setTabCompleter(authCommands);
+                getLogger().info("Команда 'reg' зарегистрирована");
+            } else {
+                getLogger().warning("Команда 'reg' не найдена в plugin.yml!");
+            }
+
+            PluginCommand logCommand = getCommand("log");
+            if (logCommand != null) {
+                logCommand.setExecutor(authCommands);
+                logCommand.setTabCompleter(authCommands);
+                getLogger().info("Команда 'log' зарегистрирована");
+            } else {
+                getLogger().warning("Команда 'log' не найдена в plugin.yml!");
+            }
 
         } catch (Exception e) {
             getLogger().warning("Не удалось загрузить систему авторизации: " + e.getMessage());
-            getLogger().warning("Плагин будет работать без системы авторизации");
+            e.printStackTrace();
         }
 
         // Регистрируем слушатель событий (старый Events.java)
+        getLogger().info("Регистрация слушателя событий Events...");
         getServer().getPluginManager().registerEvents(new Events(this), this);
 
         // Регистрируем команды через общий класс команд
+        getLogger().info("Регистрация обычных команд...");
         Commands commandManager = new Commands(this);
 
         // Создаем nh_command с authManager если он есть
         nh_command nhCommand;
         if (authManager != null) {
-            nhCommand = new nh_command(this, authManager);  // с authManager
+            nhCommand = new nh_command(this, authManager);
         } else {
-            nhCommand = new nh_command(this);  // без authManager
+            nhCommand = new nh_command(this);
         }
 
         // Регистрируем команды
@@ -56,14 +86,12 @@ public class NingHelper extends JavaPlugin {
         getCommand("nh").setExecutor(nhCommand);
         getCommand("nh").setTabCompleter(nhCommand);
 
-        // КОМАНДЫ АВТОРИЗАЦИИ НУЖНО СОЗДАТЬ ОТДЕЛЬНО!
-        // Создайте класс для команд авторизации или добавьте их в существующий
-
+        getLogger().info("=== NINGHELPER ЗАПУЩЕН УСПЕШНО ===");
         getLogger().info(ChatColor.GREEN + "|" + ChatColor.BLUE + "  |\\   |   |     |  " + ChatColor.GREEN + "|");
         getLogger().info(ChatColor.GREEN + "|" + ChatColor.BLUE + "  | \\  |   |_____|  " + ChatColor.GREEN + "|");
         getLogger().info(ChatColor.GREEN + "|" + ChatColor.BLUE + "  |  \\ |   |-----|  " + ChatColor.GREEN + "|");
         getLogger().info(ChatColor.GREEN + "|" + ChatColor.BLUE + "  |   \\|   |     |  " + ChatColor.GREEN + "|");
-        getLogger().info("NingHelper -- плагин для помощи с сервером NingMine! Плагин запущен. v " + this.getDescription().getVersion());
+        getLogger().info("NingHelper v" + this.getDescription().getVersion() + " запущен!");
     }
 
     @Override

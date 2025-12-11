@@ -218,4 +218,33 @@ public class AuthListener implements Listener {
         loggedInPlayers.remove(player.getUniqueId());
         player.kickPlayer(ChatColor.YELLOW + "Вы вышли из аккаунта.");
     }
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
+        Player player = event.getPlayer();
+
+        // Если игрок не авторизован
+        if (!isLoggedIn(player)) {
+            String command = event.getMessage().toLowerCase();
+
+            // Разрешаем только команды авторизации
+            boolean allowedCommand =
+                    command.startsWith("/l ") ||
+                            command.startsWith("/login ") ||
+                            command.startsWith("/r ") ||
+                            command.startsWith("/register ") ||
+                            command.equals("/l") ||
+                            command.equals("/login") ||
+                            command.equals("/r") ||
+                            command.equals("/register");
+
+            if (!allowedCommand) {
+                event.setCancelled(true);
+                player.sendMessage(ChatColor.RED + "══════════════════════════════════");
+                player.sendMessage(ChatColor.RED + "Сначала авторизуйтесь!");
+                player.sendMessage(ChatColor.YELLOW + "Для регистрации: /r <пароль> <пароль>");
+                player.sendMessage(ChatColor.YELLOW + "Для входа: /l <пароль>");
+                player.sendMessage(ChatColor.RED + "══════════════════════════════════");
+            }
+        }
+    }
 }

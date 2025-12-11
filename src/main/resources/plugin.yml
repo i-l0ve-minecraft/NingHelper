@@ -13,6 +13,15 @@ commands:
     description: Главная команда плагина
     usage: /<command> [help|reload|version]
     aliases: [ninghelper, nh]
+  reg:
+    description: реегистрирует игрока
+    usage: /<command> пароль повтор_пароля
+    aliases: [reg, register, r]
+
+  log:
+    description: входит в аккаунт
+    usage: /<command> пароль
+    aliases: [log, login, l]
 
 permissions:
   ninghelper.reload:

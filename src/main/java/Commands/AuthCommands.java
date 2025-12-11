@@ -22,10 +22,13 @@ public class AuthCommands implements CommandExecutor, TabCompleter {
         this.plugin = plugin;
         this.authManager = authManager;
         this.authListener = authListener;
+        plugin.getLogger().info("AuthCommands создан!");
     }
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        plugin.getLogger().info("Вызвана команда: " + command.getName() + " с аргументами: " + String.join(", ", args));
+
         if (!(sender instanceof Player)) {
             sender.sendMessage(ChatColor.RED + "Только для игроков!");
             return true;
@@ -34,9 +37,11 @@ public class AuthCommands implements CommandExecutor, TabCompleter {
         Player player = (Player) sender;
         String cmd = command.getName().toLowerCase();
 
-        if (cmd.equals("r") || cmd.equals("register")) {
+        if (cmd.equals("r") || cmd.equals("register") || cmd.equals("reg")) {
+            plugin.getLogger().info("Обработка регистрации для " + player.getName());
             return handleRegister(player, args);
-        } else if (cmd.equals("l") || cmd.equals("login")) {
+        } else if (cmd.equals("l") || cmd.equals("login") || cmd.equals("log")) {
+            plugin.getLogger().info("Обработка входа для " + player.getName());
             return handleLogin(player, args);
         } else if (cmd.equals("logout")) {
             return handleLogout(player);
@@ -107,13 +112,13 @@ public class AuthCommands implements CommandExecutor, TabCompleter {
         List<String> suggestions = new ArrayList<>();
         String cmd = command.getName().toLowerCase();
 
-        if (cmd.equals("r") || cmd.equals("register")) {
+        if (cmd.equals("r") || cmd.equals("register") || cmd.equals("reg")) {
             if (args.length == 1) {
                 suggestions.add("<пароль>");
             } else if (args.length == 2) {
                 suggestions.add("<повторите пароль>");
             }
-        } else if (cmd.equals("l") || cmd.equals("login")) {
+        } else if (cmd.equals("l") || cmd.equals("login") || cmd.equals("log")) {
             if (args.length == 1) {
                 suggestions.add("<пароль>");
             }
