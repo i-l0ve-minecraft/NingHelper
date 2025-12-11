@@ -23,7 +23,7 @@ public class NingHelper extends JavaPlugin {
         getConfig().options().copyDefaults(true);
         saveConfig();
 
-        getLogger().info("=== ЗАПУСК NINGHELPER ===");
+        getLogger().info("§6=== §aЗАПУСК NINGHELPER §6===");
 
         // Инициализируем систему авторизации
         try {
@@ -36,7 +36,7 @@ public class NingHelper extends JavaPlugin {
             authCommands = new AuthCommands(this, authManager, authListener);
 
             getServer().getPluginManager().registerEvents(authListener, this);
-            getLogger().info("Слушатель событий зарегистрирован");
+            getLogger().info("§aСлушатель событий зарегистрирован");
 
             // Регистрируем команды авторизации - ДОБАВЬТЕ ЭТО!
             getLogger().info("Регистрация команд авторизации...");
@@ -45,22 +45,22 @@ public class NingHelper extends JavaPlugin {
             if (regCommand != null) {
                 regCommand.setExecutor(authCommands);
                 regCommand.setTabCompleter(authCommands);
-                getLogger().info("Команда 'reg' зарегистрирована");
+                getLogger().info("§aКоманда 'reg' зарегистрирована");
             } else {
-                getLogger().warning("Команда 'reg' не найдена в plugin.yml!");
+                getLogger().warning("§4Команда 'reg' не найдена в plugin.yml!");
             }
 
             PluginCommand logCommand = getCommand("log");
             if (logCommand != null) {
                 logCommand.setExecutor(authCommands);
                 logCommand.setTabCompleter(authCommands);
-                getLogger().info("Команда 'log' зарегистрирована");
+                getLogger().info("§aКоманда 'log' зарегистрирована");
             } else {
-                getLogger().warning("Команда 'log' не найдена в plugin.yml!");
+                getLogger().warning("§4Команда 'log' не найдена в plugin.yml!");
             }
 
         } catch (Exception e) {
-            getLogger().warning("Не удалось загрузить систему авторизации: " + e.getMessage());
+            getLogger().warning("§4Не удалось загрузить систему авторизации: " + e.getMessage());
             e.printStackTrace();
         }
 
@@ -87,11 +87,12 @@ public class NingHelper extends JavaPlugin {
         getCommand("nh").setTabCompleter(nhCommand);
 
         getLogger().info("=== NINGHELPER ЗАПУЩЕН УСПЕШНО ===");
-        getLogger().info(ChatColor.GREEN + "|" + ChatColor.BLUE + "  |\\   |   |     |  " + ChatColor.GREEN + "|");
-        getLogger().info(ChatColor.GREEN + "|" + ChatColor.BLUE + "  | \\  |   |_____|  " + ChatColor.GREEN + "|");
-        getLogger().info(ChatColor.GREEN + "|" + ChatColor.BLUE + "  |  \\ |   |-----|  " + ChatColor.GREEN + "|");
-        getLogger().info(ChatColor.GREEN + "|" + ChatColor.BLUE + "  |   \\|   |     |  " + ChatColor.GREEN + "|");
-        getLogger().info("NingHelper v" + this.getDescription().getVersion() + " запущен!");
+        getLogger().info("§a  |\\   |   |      |");
+        getLogger().info("§a  | \\  |   |      |");
+        getLogger().info("§a  |  \\ |   |______|");
+        getLogger().info("§a  |   \\|   |      |");
+        getLogger().info("§a  |    \\|   |      |");
+        getLogger().info("§6NingHelper v" + this.getDescription().getVersion() + "§6 запущен!");
     }
 
     @Override
