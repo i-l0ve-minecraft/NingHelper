@@ -5,7 +5,6 @@ import Commands.Commands;
 import Commands.nh_command;
 import auth.AuthManager;
 import auth.AuthListener;
-import org.bukkit.ChatColor;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -16,88 +15,161 @@ public class NingHelper extends JavaPlugin {
     private AuthListener authListener;
     private AuthCommands authCommands;
 
+    // ANSI коды для цветов в консоли
+    private static final String ANSI_RESET = "\u001B[0m";
+    private static final String ANSI_GREEN = "\u001B[32m";
+    private static final String ANSI_RED = "\u001B[31m";
+    private static final String ANSI_YELLOW = "\u001B[33m";
+    private static final String ANSI_BLUE = "\u001B[34m";
+    private static final String ANSI_CYAN = "\u001B[36m";
+    private static final String ANSI_WHITE = "\u001B[37m";
+    private static final String ANSI_BOLD = "\u001B[1m";
+
     @Override
     public void onEnable() {
+        // Зеленое сообщение о начале запуска с ANSI кодами
+        logColor(ANSI_GREEN, "╔══════════════════════════════════╗");
+        logColor(ANSI_GREEN, "║     ЗАПУСК NINGHELPER v" + getDescription().getVersion() + "     ║");
+        logColor(ANSI_GREEN, "╚══════════════════════════════════╝");
+
         saveDefaultConfig();
         setupDefaultConfig();
         getConfig().options().copyDefaults(true);
         saveConfig();
 
-        getLogger().info("§6=== §aЗАПУСК NINGHELPER §6===");
+        // Зеленое сообщение о загрузке конфигурации
+        logSuccess("Конфигурация загружена и сохранена");
 
         // Инициализируем систему авторизации
         try {
-            getLogger().info("Инициализация системы авторизации...");
+            logInfo("Инициализация системы авторизации...");
             authManager = new AuthManager(this);
             authListener = new AuthListener(this, authManager);
 
             // Создаем обработчик команд авторизации
-            getLogger().info("Создание обработчика команд авторизации...");
+            logInfo("Создание обработчика команд авторизации...");
             authCommands = new AuthCommands(this, authManager, authListener);
 
             getServer().getPluginManager().registerEvents(authListener, this);
-            getLogger().info("§aСлушатель событий зарегистрирован");
+            logSuccess("Слушатель событий AuthListener зарегистрирован");
 
-            // Регистрируем команды авторизации - ДОБАВЬТЕ ЭТО!
-            getLogger().info("Регистрация команд авторизации...");
+            // Регистрируем команды авторизации
+            logInfo("Регистрация команд авторизации...");
 
             PluginCommand regCommand = getCommand("reg");
             if (regCommand != null) {
                 regCommand.setExecutor(authCommands);
                 regCommand.setTabCompleter(authCommands);
-                getLogger().info("§aКоманда 'reg' зарегистрирована");
+                logSuccess("  Команда 'reg' зарегистрирована (алиасы: /r, /register)");
             } else {
-                getLogger().warning("§4Команда 'reg' не найдена в plugin.yml!");
+                logError("  Команда 'reg' не найдена в plugin.yml!");
             }
 
             PluginCommand logCommand = getCommand("log");
             if (logCommand != null) {
                 logCommand.setExecutor(authCommands);
                 logCommand.setTabCompleter(authCommands);
-                getLogger().info("§aКоманда 'log' зарегистрирована");
+                logSuccess("  Команда 'log' зарегистрирована (алиасы: /l, /login)");
             } else {
-                getLogger().warning("§4Команда 'log' не найдена в plugin.yml!");
+                logError("  Команда 'log' не найдена в plugin.yml!");
             }
 
+            // Зеленое сообщение об успешной загрузке системы авторизации
+            logSuccess("Система авторизации загружена успешно!");
+
         } catch (Exception e) {
-            getLogger().warning("§4Не удалось загрузить систему авторизации: " + e.getMessage());
-            e.printStackTrace();
+            logError("Не удалось загрузить систему авторизации: " + e.getMessage());
+            logWarning("Плагин будет работать без системы авторизации");
         }
 
         // Регистрируем слушатель событий (старый Events.java)
-        getLogger().info("Регистрация слушателя событий Events...");
-        getServer().getPluginManager().registerEvents(new Events(this), this);
+        logInfo("Регистрация слушателя событий Events...");
+        try {
+            // Если у вас нет класса Events или он называется иначе, удалите или закомментируйте эту строку:
+            getServer().getPluginManager().registerEvents(new Events(this), this);
+            logSuccess("Слушатель событий Events зарегистрирован");
+        } catch (Exception e) {
+            logError("Ошибка при регистрации Events: " + e.getMessage());
+            logWarning("Events не зарегистрирован, продолжаем запуск...");
+        }
 
         // Регистрируем команды через общий класс команд
-        getLogger().info("Регистрация обычных команд...");
+        logInfo("Регистрация обычных команд...");
         Commands commandManager = new Commands(this);
 
         // Создаем nh_command с authManager если он есть
         nh_command nhCommand;
         if (authManager != null) {
             nhCommand = new nh_command(this, authManager);
+            logSuccess("  nh_command создан с поддержкой авторизации");
         } else {
             nhCommand = new nh_command(this);
+            logWarning("  nh_command создан без поддержки авторизации");
         }
 
         // Регистрируем команды
-        getCommand("NingHelperReload").setExecutor(commandManager);
-        getCommand("гдея").setExecutor(commandManager);
-        getCommand("nh").setExecutor(nhCommand);
-        getCommand("nh").setTabCompleter(nhCommand);
+        try {
+            getCommand("NingHelperReload").setExecutor(commandManager);
+            getCommand("гдея").setExecutor(commandManager);
+            getCommand("nh").setExecutor(nhCommand);
+            getCommand("nh").setTabCompleter(nhCommand);
 
-        getLogger().info("=== NINGHELPER ЗАПУЩЕН УСПЕШНО ===");
-        getLogger().info("§a  |\\   |   |      |");
-        getLogger().info("§a  | \\  |   |      |");
-        getLogger().info("§a  |  \\ |   |______|");
-        getLogger().info("§a  |   \\|   |      |");
-        getLogger().info("§a  |    \\|   |      |");
-        getLogger().info("§6NingHelper v" + this.getDescription().getVersion() + "§6 запущен!");
+            logSuccess("Все команды зарегистрированы:");
+            logSuccess("  - /NingHelperReload");
+            logSuccess("  - /гдея");
+            logSuccess("  - /nh (алиасы: /ninghelper)");
+            if (authManager != null) {
+                logSuccess("  - /reg (регистрация)");
+                logSuccess("  - /log (вход)");
+            }
+        } catch (Exception e) {
+            logError("Ошибка при регистрации команд: " + e.getMessage());
+        }
+
+        // ЗЕЛЕНОЕ сообщение об успешном запуске
+        logColor(ANSI_GREEN, "╔══════════════════════════════════════════════╗");
+        logColor(ANSI_GREEN, "║          " + ANSI_YELLOW + "NINGHELPER ЗАПУЩЕН УСПЕШНО!" + ANSI_GREEN + "         ║");
+        logColor(ANSI_GREEN, "╠══════════════════════════════════════════════╣");
+        logColor(ANSI_GREEN, "║ " + ANSI_CYAN + "Версия: " + ANSI_WHITE + this.getDescription().getVersion() +
+                ANSI_GREEN + "                              ║");
+        logColor(ANSI_GREEN, "║ " + ANSI_CYAN + "Авторизация: " +
+                (authManager != null ? ANSI_GREEN + "ВКЛЮЧЕНА" : ANSI_RED + "ОТКЛЮЧЕНА") +
+                ANSI_GREEN + "                      ║");
+        logColor(ANSI_GREEN, "╚══════════════════════════════════════════════╝");
+
+
+
+        logSuccess("Плагин для помощи с сервером NingMine запущен!");
+        logColor(ANSI_GREEN + ANSI_BOLD, "✅ Готов к работе!");
     }
 
     @Override
     public void onDisable() {
-        getLogger().info("Плагин NingHelper - выключен.");
+        // Цветное сообщение о выключении
+        logColor(ANSI_RED, "╔══════════════════════════════════╗");
+        logColor(ANSI_RED, "║     NINGHELPER ВЫКЛЮЧЕН         ║");
+        logColor(ANSI_RED, "╚══════════════════════════════════╝");
+    }
+
+    // Методы для цветного вывода с ANSI кодами
+    private void logColor(String color, String message) {
+        getLogger().info(color + message + ANSI_RESET);
+    }
+
+    private void logSuccess(String message) {
+        getLogger().info(ANSI_GREEN + "✓ " + message + ANSI_RESET);
+    }
+
+    private void logError(String message) {
+        getLogger().info(ANSI_RED + "✗ " + message + ANSI_RESET);
+    }
+
+    private void logWarning(String message) {
+        getLogger().info(ANSI_YELLOW + "⚠ " + message + ANSI_RESET);
+    }
+
+    private void logInfo(String message) {
+        getLogger().info(ANSI_CYAN + "→ " + message + ANSI_RESET);
     }
 
     private void setupDefaultConfig() {
