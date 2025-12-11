@@ -13,14 +13,14 @@ admin-join-message: '&cАдминистратор сервера &6{player} &cз
 # Список разрешенных игроков (никнеймы в нижнем регистре)
 allowed-players:
   - il0veminecraft14
-  - XD_kar
-  - LAGAHKA
-  - Clayworld200
+  - xd_kar
+  - lagaha
+  - clayworld200
   - frutikkek
-  - SulAyd27
-  - UnHappyParrot012
-  - AnonSN
-  - Marinaksolotl
+  - sulayd27
+  - unhappyparrot012
+  - anonsn
+  - marinaksolotl
 
 # Список администраторов
 admins:

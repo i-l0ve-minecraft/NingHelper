@@ -1,0 +1,72 @@
+# Настройки системы авторизации
+
+# Основные настройки
+auth-enabled: true
+auto-login-after-register: true
+
+        # Настройки пароля
+password:
+min-length: 4
+max-length: 20
+require-numbers: false
+require-letters: true
+require-special-chars: false
+
+        # Таймауты
+timeouts:
+login-timeout: 60           # секунд, через сколько кикнуть если не авторизовался
+session-duration: 86400     # секунд, длительность сессии (24 часа)
+kick-message: '&cВы не успели авторизоваться за {time} секунд!'
+
+        # Сообщения
+messages:
+register:
+success: '&aРегистрация успешна! Теперь войдите: &6/l <пароль>'
+already-registered: '&cВы уже зарегистрированы!'
+password-mismatch: '&cПароли не совпадают!'
+password-too-short: '&cПароль должен содержать минимум {min} символов!'
+password-too-long: '&cПароль не должен превышать {max} символов!'
+password-no-letters: '&cПароль должен содержать буквы!'
+password-no-numbers: '&cПароль должен содержать цифры!'
+password-no-special: '&cПароль должен содержать специальные символы!'
+
+login:
+success: '&aВход выполнен успешно!'
+not-registered: '&cВы не зарегистрированы! Используйте &6/r <пароль> <пароль>'
+wrong-password: '&cНеверный пароль!'
+already-logged: '&cВы уже авторизованы!'
+timeout: '&cВремя на авторизацию истекло!'
+
+general:
+welcome-unregistered: |
+        &6══════════════════════════════════
+        &aДобро пожаловать!
+        &eВы не зарегистрированы.
+      &fДля регистрации: &6/r <пароль> <пароль>
+      &eПример: &f/r mypass123 mypass123
+      &6══════════════════════════════════
+welcome-registered: |
+        &6══════════════════════════════════
+        &aДобро пожаловать обратно!
+        &eДля входа: &6/l <пароль>
+      &eПример: &f/l mypass123
+      &6══════════════════════════════════
+login-required: '&cСначала авторизуйтесь!'
+
+        # Исключения (игроки которые не должны авторизовываться)
+exemptions:
+players:
+
+permissions:
+
+    
+# Блокировка действий для неавторизованных
+block-actions:
+move: true
+chat: true
+build: true
+interact: true
+damage: true
+inventory: true
+drop-items: true
+pickup-items: true

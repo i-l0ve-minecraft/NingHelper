@@ -8,12 +8,25 @@ commands:
   NingHelperReload:
     description: Перезагрузить конфигурацию вайтлиста
     usage: /<command>
+
   nh:
-    description: главная команда плагина
-    usage: /<command> <help|helplugin>
+    description: Главная команда плагина
+    usage: /<command> [help|reload|version]
     aliases: [ninghelper, nh]
+  reg:
+    description: реегистрирует игрока
+    usage: /<command> пароль повтор_пароля
+    aliases: [reg, register, r]
+
+  log:
+    description: входит в аккаунт
+    usage: /<command> пароль
+    aliases: [log, login, l]
 
 permissions:
+  ninghelper.reload:
+    description: Позволяет перезагружать все конфигурации
+    default: op
   whitelist.reload:
     description: Позволяет перезагружать конфигурацию вайтлиста
     default: op
